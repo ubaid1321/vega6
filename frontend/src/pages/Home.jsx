@@ -59,6 +59,21 @@ const Home = () => {
     navigate('/create-blog', { state: { blog } });
   };
 
+  const handleView = (blog) => {
+    navigate('/blog-detail', { state: { blog } });
+  };
+
+  const thStyle = {
+    textAlign: 'left',
+    padding: '10px',
+    borderBottom: '1px solid #ccc',
+  };
+
+  const tdStyle = {
+    padding: '10px',
+    verticalAlign: 'top',
+  };
+
   if (!user) return null;
 
   return (
@@ -74,7 +89,9 @@ const Home = () => {
       >
         <h2>Blog</h2>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <button onClick={handleCreateBlog} style={{ marginRight: '10px' }}>Create Blog</button>
+          <button onClick={handleCreateBlog} style={{ marginRight: '10px' }}>
+            Create Blog
+          </button>
           <button onClick={handleLogout}>Logout</button>
           {user?.profilePicture && (
             <img
@@ -97,16 +114,38 @@ const Home = () => {
         {blogs.length === 0 ? (
           <p>No blogs found.</p>
         ) : (
-          blogs.map((blog) => (
-            <div key={blog._id} style={{ border: '1px solid #ddd', marginBottom: '20px', padding: '10px' }}>
-              <h3>{blog.title}</h3>
-              <p>{blog.description}</p>
-              {blog.blogImage && <img src={blog.blogImage} alt="Blog" style={{ width: '200px' }} />}
-              <br />
-              <button onClick={() => handleEdit(blog)} style={{ marginRight: '10px' }}>Edit</button>
-              <button onClick={() => handleDelete(blog._id)}>Delete</button>
-            </div>
-          ))
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f2f2f2' }}>
+                <th style={thStyle}>Title</th>
+                <th style={thStyle}>Description</th>
+                <th style={thStyle}>Image</th>
+                <th style={thStyle}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {blogs.map((blog) => (
+                <tr key={blog._id} style={{ borderBottom: '1px solid #ccc' }}>
+                  <td style={tdStyle}>{blog.title}</td>
+                  <td style={tdStyle}>{blog.description}</td>
+                  <td style={tdStyle}>
+                    {blog.blogImage && (
+                      <img src={blog.blogImage} alt="Blog" style={{ width: '100px' }} />
+                    )}
+                  </td>
+                  <td style={tdStyle}>
+                    <button onClick={() => handleEdit(blog)} style={{ marginRight: '5px' }}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(blog._id)} style={{ marginRight: '5px' }}>
+                      Delete
+                    </button>
+                    <button onClick={() => handleView(blog)}>View</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </>
